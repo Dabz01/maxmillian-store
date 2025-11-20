@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Maxmillian – Payment</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <span></span>
+      Maxmillian
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="payment.html" class="active">Payment</a>
+    </nav>
+  </header>
+
+  <main class="main-container">
+    <div class="section-header">
+      <div class="section-tag">Checkout</div>
+      <div class="section-title">Confirm your order & pay on WhatsApp</div>
+      <p style="margin-top:4px; color:#9ca3af; font-size:0.86rem;">
+        Review your selected item, then tap the button to open WhatsApp with your order filled in.
+      </p>
+    </div>
+
+    <div class="payment-box">
+      <h2>Order Summary</h2>
+
+      <div id="orderSummary" class="payment-summary">
+        Loading your order details...
+      </div>
+
+      <a id="whatsappLink" class="btn btn-primary" href="#" target="_blank">
+        Continue on WhatsApp
+      </a>
+
+      <p class="note">
+        You will be redirected to WhatsApp to complete your order and confirm payment.
+        If this doesn’t open WhatsApp automatically, please check that you are logged in
+        or have WhatsApp installed.
+      </p>
+    </div>
+  </main>
+
+  <script>
+    var WHATSAPP_NUMBER = "2349060390763";
+
+    var params = new URLSearchParams(window.location.search);
+    var item = params.get("item") || "Selected Item";
+    var price = params.get("price") || "—";
+
+    var summaryEl = document.getElementById("orderSummary");
+    summaryEl.innerHTML = 
+      "<p><strong>Item:</strong> " + item + "<br>" +
+      "<strong>Price:</strong> ₦" + price + "</p>" +
+      "<p style=\"margin-top:10px; font-size:0.86rem; color:#9ca3af;\">" +
+      "When you continue, we’ll send this order to WhatsApp along with your selected item " +
+      "and price so we can confirm details with you." +
+      "</p>";
+
+    var message = "Hello, I would like to order:\n\nItem: " + item +
+      "\nPrice: ₦" + price + "\n\nPlease send me payment details.";
+    var encodedMessage = encodeURIComponent(message);
+
+    var whatsappUrl = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodedMessage;
+    document.getElementById("whatsappLink").href = whatsappUrl;
+  </script>
+</body>
+</html>

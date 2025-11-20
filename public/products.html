@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Maxmillian – Products</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <span></span>
+      Maxmillian
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="products.html" class="active">Products</a>
+      <a href="payment.html">Payment</a>
+    </nav>
+  </header>
+
+  <main class="main-container">
+    <div class="section-header">
+      <div class="section-tag">Storefront</div>
+      <div class="section-title">Available Products</div>
+      <p style="margin-top:4px; color:#9ca3af; font-size:0.86rem;">
+        Tap <strong>Order</strong> on any item to continue to the WhatsApp payment step.
+      </p>
+    </div>
+
+    <div id="productsGrid" class="products-grid">
+      <!-- Products loaded by JS -->
+    </div>
+  </main>
+
+  <script>
+    async function loadProducts() {
+      try {
+        const res = await fetch("/api/products");
+        const products = await res.json();
+        const grid = document.getElementById("productsGrid");
+        grid.innerHTML = "";
+
+        if (!products.length) {
+          const empty = document.createElement("div");
+          empty.style.color = "#9ca3af";
+          empty.style.fontSize = "0.9rem";
+          empty.textContent = "No products available yet.";
+          grid.appendChild(empty);
+          return;
+        }
+
+        products.forEach(function(p) {
+          const card = document.createElement("div");
+          card.className = "product-card";
+
+          const topDiv = document.createElement("div");
+
+          const title = document.createElement("div");
+          title.className = "product-title";
+          title.textContent = p.title;
+
+          const price = document.createElement("div");
+          price.className = "product-price";
+          price.textContent = "₦" + Number(p.price).toLocaleString();
+
+          const desc = document.createElement("div");
+          desc.className = "product-desc";
+          desc.textContent = p.description || "";
+
+          const meta = document.createElement("div");
+          meta.className = "product-meta";
+          meta.textContent = "Tap order to continue on WhatsApp.";
+
+          topDiv.appendChild(title);
+          topDiv.appendChild(price);
+          topDiv.appendChild(desc);
+          topDiv.appendChild(meta);
+
+          const btn = document.createElement("a");
+          btn.className = "btn btn-primary";
+          var itemParam = encodeURIComponent(p.title);
+          var priceParam = encodeURIComponent(p.price);
+          btn.href = "payment.html?item=" + itemParam + "&price=" + priceParam;
+          btn.textContent = "Order";
+
+          card.appendChild(topDiv);
+          card.appendChild(btn);
+          grid.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "title": "Small Item Pack",
+    "price": 2000,
+    "description": "Perfect for light orders and quick snacks."
+  },
+  {
+    "id": "2",
+    "title": "Family Combo",
+    "price": 7500,
+    "description": "Enough for family or small group gatherings."
+  },
+  {
+    "id": "3",
+    "title": "Party Pack",
+    "price": 15000,
+    "description": "Great for parties and celebrations."
+  }
+]

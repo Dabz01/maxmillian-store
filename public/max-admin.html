@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Maxmillian – Admin Panel</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <script>
+    if (localStorage.getItem("maxmillian_admin_auth") !== "yes") {
+      window.location.href = "max-admin-login.html";
+    }
+  </script>
+
+  <main class="main-container">
+    <div class="section-header">
+      <div class="section-tag">Back Office</div>
+      <div class="section-title">Maxmillian Product Manager</div>
+    </div>
+
+    <section class="admin-card">
+      <div class="admin-top">
+        <div class="admin-desc">
+          <p>
+            Use this dashboard to control which products appear on your store.
+            Add a new item, edit existing ones, or remove products you no longer sell.
+          </p>
+        </div>
+        <div>
+          <span class="badge" id="modeBadge">
+            <span class="badge-dot"></span>
+            Mode: Add
+          </span>
+        </div>
+      </div>
+
+      <div class="admin-grid">
+        <div>
+          <form id="productForm" class="admin-form">
+            <div>
+              <label for="title">Product name</label>
+              <input type="text" id="title" placeholder="e.g. Party Jollof Pack" required />
+            </div>
+            <div>
+              <label for="price">Price (₦)</label>
+              <input type="number" id="price" required min="0" step="1" placeholder="e.g. 5000" />
+            </div>
+            <div>
+              <label for="description">Description</label>
+              <textarea id="description" placeholder="Short description (optional)"></textarea>
+            </div>
+            <div style="display:flex; align-items:flex-end; justify-content:flex-start; gap:8px;">
+              <button type="submit" class="btn btn-primary" id="saveButton">Add Product</button>
+              <button type="button" class="btn btn-outline" id="resetButton">Clear</button>
+              <button type="button" class="btn btn-outline btn-danger" id="logoutButton">Logout</button>
+            </div>
+          </form>
+          <p style="font-size:0.78rem; color:#9ca3af;">
+            Tip: Keep this page and the login link private. Customers can not see it from the main site.
+          </p>
+        </div>
+
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Price (₦)</th>
+                <th>Description</th>
+                <th style="width:130px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <!-- Rows will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    var editingId = null;
+
+    async function fetchProducts() {
+      var res = await fetch("/api/products");
+      return await res.json();
+    }
+
+    function renderProducts(products) {
+      var tbody = document.getElementById("productsTableBody");
+      tbody.innerHTML = "";
+
+      if (!products.length) {
+        var tr = document.createElement("tr");
+        var td = document.createElement("td");
+        td.colSpan = 4;
+        td.textContent = "No products yet. Add one using the form on the left.";
+        td.style.color = "#9ca3af";
+        td.style.fontSize = "0.84rem";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+
+      products.forEach(function(p) {
+        var tr = document.createElement("tr");
+
+        var nameTd = document.createElement("td");
+        nameTd.textContent = p.title;
+
+        var priceTd = document.createElement("td");
+        priceTd.textContent = Number(p.price).toLocaleString();
+
+        var descTd = document.createElement("td");
+        descTd.textContent = p.description || "";
+
+        var actionsTd = document.createElement("td");
+        actionsTd.className = "admin-actions";
+
+        var editBtn = document.createElement("button");
+        editBtn.type = "button";
+        editBtn.className = "btn btn-outline";
+        editBtn.textContent = "Edit";
+        editBtn.onclick = function() { startEdit(p); };
+
+        var delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "btn btn-outline btn-danger";
+        delBtn.textContent = "Delete";
+        delBtn.onclick = function() { deleteProduct(p.id); };
+
+        actionsTd.appendChild(editBtn);
+        actionsTd.appendChild(delBtn);
+
+        tr.appendChild(nameTd);
+        tr.appendChild(priceTd);
+        tr.appendChild(descTd);
+        tr.appendChild(actionsTd);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function loadAndRender() {
+      var products = await fetchProducts();
+      renderProducts(products);
+    }
+
+    function resetForm() {
+      document.getElementById("productForm").reset();
+      editingId = null;
+      document.getElementById("saveButton").textContent = "Add Product";
+      document.getElementById("modeBadge").innerHTML = '<span class="badge-dot"></span>Mode: Add';
+    }
+
+    function startEdit(product) {
+      editingId = product.id;
+      document.getElementById("title").value = product.title;
+      document.getElementById("price").value = product.price;
+      document.getElementById("description").value = product.description || "";
+      document.getElementById("saveButton").textContent = "Save Changes";
+      document.getElementById("modeBadge").innerHTML = '<span class="badge-dot"></span>Mode: Edit';
+    }
+
+    async function deleteProduct(id) {
+      var sure = confirm("Delete this product?");
+      if (!sure) return;
+
+      await fetch("/api/products/" + id, { method: "DELETE" });
+      await loadAndRender();
+      resetForm();
+    }
+
+    document.getElementById("productForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      var title = document.getElementById("title").value.trim();
+      var price = document.getElementById("price").value.trim();
+      var description = document.getElementById("description").value.trim();
+
+      if (!title || !price) return;
+
+      var body = JSON.stringify({
+        title: title,
+        price: Number(price),
+        description: description
+      });
+
+      if (editingId) {
+        await fetch("/api/products/" + editingId, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: body
+        });
+      } else {
+        await fetch("/api/products", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: body
+        });
+      }
+
+      await loadAndRender();
+      resetForm();
+    });
+
+    document.getElementById("resetButton").addEventListener("click", resetForm);
+
+    document.getElementById("logoutButton").addEventListener("click", function() {
+      localStorage.removeItem("maxmillian_admin_auth");
+      window.location.href = "max-admin-login.html";
+    });
+
+    loadAndRender();
+  </script>
+</body>
+</html>

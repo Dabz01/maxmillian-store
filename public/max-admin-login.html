@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Maxmillian – Admin Login</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="main-container" style="max-width:420px;">
+    <section class="admin-card">
+      <div class="admin-top">
+        <div class="admin-desc">
+          <h2 style="font-size:1.1rem; margin-bottom:4px;">Admin Access</h2>
+          <p style="font-size:0.85rem;">
+            This page is for the owner only. Enter your PIN to open the Maxmillian product manager.
+          </p>
+        </div>
+      </div>
+
+      <form id="loginForm" class="admin-form" style="grid-template-columns:1fr;">
+        <div>
+          <label for="pin">Admin PIN</label>
+          <input type="password" id="pin" placeholder="Enter PIN" required />
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button type="submit" class="btn btn-primary" style="width:100%;">Unlock Admin</button>
+        </div>
+      </form>
+      <p style="font-size:0.78rem; color:#9ca3af; margin-top:6px;">
+        Keep this link private. Anyone with the PIN can change products on your store.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    var CORRECT_PIN = "1234"; // change this PIN if you like
+
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      var pin = document.getElementById("pin").value.trim();
+      if (pin === CORRECT_PIN) {
+        localStorage.setItem("maxmillian_admin_auth", "yes");
+        window.location.href = "max-admin.html";
+      } else {
+        alert("Incorrect PIN");
+      }
+    });
+  </script>
+</body>
+</html>

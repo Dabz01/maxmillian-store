@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html><head><meta charset='UTF-8'><title>Maxmillian – Admin Login</title>
+<link rel='stylesheet' href='styles.css'></head>
+<body style='padding:20px;'>
+
+<h2>Admin Login</h2>
+<p>Enter PIN to access admin panel</p>
+
+<input id='pin' type='password' placeholder='Enter PIN' style='padding:8px;'>
+<button onclick='login()' style='padding:8px;background:#22c55e;'>Login</button>
+
+<script>
+function login(){
+  let p = document.getElementById("pin").value;
+  if(p === "1234"){
+    localStorage.setItem("admin_auth", "yes");
+    window.location = "admin.html";
+  } else {
+    alert("Incorrect PIN");
+  }
+}
+</script>
+
+</body></html>
