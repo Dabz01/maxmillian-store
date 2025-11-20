@@ -45,7 +45,18 @@
             <option value="price-desc">Price: High → Low</option>
           </select>
         </div>
+        <div style="margin-left:auto; font-size:0.8rem; color:#9ca3af;" id="countLabel">
+          <!-- count text -->
+        </div>
       </div>
+    </div>
+
+    <div class="category-chip-row" id="topCategoryChips">
+      <button class="category-chip" data-cat="all">All</button>
+      <button class="category-chip" data-cat="Meals">Meals</button>
+      <button class="category-chip" data-cat="Combos">Combos</button>
+      <button class="category-chip" data-cat="Drinks">Drinks</button>
+      <button class="category-chip" data-cat="Snacks">Snacks</button>
     </div>
 
     <div id="productsGrid" class="products-grid">
@@ -61,6 +72,7 @@
         var res = await fetch("/api/products");
         allProducts = await res.json();
         populateCategoryFilter();
+        applyInitialCategoryFromUrl();
         renderProducts();
       } catch (err) {
         console.error(err);
@@ -80,9 +92,33 @@
       });
     }
 
+    function applyInitialCategoryFromUrl() {
+      var params = new URLSearchParams(window.location.search);
+      var cat = params.get("category");
+      var catFilter = document.getElementById("categoryFilter");
+      if (cat && Array.from(catFilter.options).some(o => o.value === cat)) {
+        catFilter.value = cat;
+      }
+      syncCategoryChips();
+    }
+
+    function syncCategoryChips() {
+      var current = document.getElementById("categoryFilter").value;
+      document.querySelectorAll("#topCategoryChips .category-chip").forEach(function(chip) {
+        var c = chip.getAttribute("data-cat");
+        if ((current === "all" && c === "all") || (current === c)) {
+          chip.classList.add("active");
+        } else {
+          chip.classList.remove("active");
+        }
+      });
+    }
+
     function renderProducts() {
       var grid = document.getElementById("productsGrid");
       grid.innerHTML = "";
+
+      var countLabel = document.getElementById("countLabel");
 
       if (!allProducts.length) {
         var empty = document.createElement("div");
@@ -90,6 +126,7 @@
         empty.style.fontSize = "0.9rem";
         empty.textContent = "No products available yet.";
         grid.appendChild(empty);
+        countLabel.textContent = "";
         return;
       }
 
@@ -114,6 +151,8 @@
           return Number(b.price || 0) - Number(a.price || 0);
         });
       }
+
+      countLabel.textContent = filtered.length + " item" + (filtered.length === 1 ? "" : "s");
 
       filtered.forEach(function (p) {
         var card = document.createElement("div");
@@ -170,7 +209,24 @@
 
     document.getElementById("searchInput").addEventListener("input", renderProducts);
     document.getElementById("sortSelect").addEventListener("change", renderProducts);
-    document.getElementById("categoryFilter").addEventListener("change", renderProducts);
+    document.getElementById("categoryFilter").addEventListener("change", function() {
+      syncCategoryChips();
+      renderProducts();
+    });
+
+    document.querySelectorAll("#topCategoryChips .category-chip").forEach(function(chip) {
+      chip.addEventListener("click", function() {
+        var cat = chip.getAttribute("data-cat");
+        var sel = document.getElementById("categoryFilter");
+        if (cat === "all") {
+          sel.value = "all";
+        } else {
+          sel.value = cat;
+        }
+        syncCategoryChips();
+        renderProducts();
+      });
+    });
 
     loadProducts();
   </script>

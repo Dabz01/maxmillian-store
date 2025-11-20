@@ -34,6 +34,8 @@
         </div>
       </div>
 
+      <div id="adminStats" class="metrics-row admin-stats-row" style="display:none;"></div>
+
       <div class="admin-grid">
         <div>
           <form id="productForm" class="admin-form">
@@ -106,6 +108,44 @@
       return await res.json();
     }
 
+    function renderStats(products) {
+      var statsEl = document.getElementById("adminStats");
+      if (!products.length) {
+        statsEl.style.display = "none";
+        statsEl.innerHTML = "";
+        return;
+      }
+
+      var total = products.length;
+      var featured = products.filter(p => p.featured).length;
+      var cats = Array.from(new Set(products.map(p => p.category).filter(Boolean))).length;
+
+      statsEl.style.display = "grid";
+      statsEl.innerHTML = "";
+
+      function makeCard(label, number, sub) {
+        var div = document.createElement("div");
+        div.className = "metric-card";
+        var l = document.createElement("div");
+        l.className = "metric-label";
+        l.textContent = label;
+        var n = document.createElement("div");
+        n.className = "metric-number";
+        n.textContent = number;
+        var s = document.createElement("div");
+        s.className = "metric-sub";
+        s.textContent = sub;
+        div.appendChild(l);
+        div.appendChild(n);
+        div.appendChild(s);
+        return div;
+      }
+
+      statsEl.appendChild(makeCard("Products", total, "Items visible in store"));
+      statsEl.appendChild(makeCard("Featured", featured, "Highlighted on homepage"));
+      statsEl.appendChild(makeCard("Categories", cats, "Distinct groups in use"));
+    }
+
     function renderProducts(products) {
       var tbody = document.getElementById("productsTableBody");
       tbody.innerHTML = "";
@@ -167,6 +207,7 @@
 
     async function loadAndRender() {
       var products = await fetchProducts();
+      renderStats(products);
       renderProducts(products);
     }
 

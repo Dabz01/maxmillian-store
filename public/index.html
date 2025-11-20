@@ -24,15 +24,30 @@
         <div class="hero-kicker">
           <span>⚡</span> Simple WhatsApp Ordering
         </div>
-        <h1>Your mini store, always open.</h1>
+        <h1>Your mini WhatsApp store, always open.</h1>
         <p>
           With Maxmillian, your customers can browse products, pick what they want,
-          and complete their order directly on WhatsApp — fast, personal, and easy.
+          and complete their order directly on WhatsApp — personal, fast and clear.
         </p>
         <div class="hero-actions">
           <a href="products.html" class="btn btn-primary">
             Browse Products
           </a>
+        </div>
+
+        <div class="category-chip-row">
+          <button class="category-chip" data-cat="Meals">
+            🍽 Meals
+          </button>
+          <button class="category-chip" data-cat="Combos">
+            🧺 Combos
+          </button>
+          <button class="category-chip" data-cat="Drinks">
+            🥤 Drinks
+          </button>
+          <button class="category-chip" data-cat="Snacks">
+            🍩 Snacks
+          </button>
         </div>
       </div>
 
@@ -84,6 +99,14 @@
   </main>
 
   <script>
+    // Quick jump from home category chips to products page with filter
+    document.querySelectorAll(".category-chip").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var cat = btn.getAttribute("data-cat");
+        window.location.href = "products.html?category=" + encodeURIComponent(cat);
+      });
+    });
+
     async function loadFeatured() {
       try {
         const res = await fetch("/api/products");

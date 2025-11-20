@@ -13,21 +13,33 @@
   --accent: #22c55e;
   --accent-soft: rgba(34, 197, 94, 0.15);
   --accent-2: #38bdf8;
+  --accent-warm: #f97316;
   --text-main: #e5e7eb;
   --text-muted: #9ca3af;
   --border-subtle: #1f2937;
   --danger: #ef4444;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   min-height: 100vh;
-  background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 90%);
+  background:
+    radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 90%);
   color: var(--text-main);
 }
+
+/* General */
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+p {
+  line-height: 1.5;
 }
 
 /* Header & Nav */
@@ -37,7 +49,8 @@ header {
   top: 0;
   z-index: 20;
   backdrop-filter: blur(16px);
-  background: linear-gradient(to right, rgba(15,23,42,0.98), rgba(15,23,42,0.9));
+  background:
+    linear-gradient(to right, rgba(15,23,42,0.98), rgba(15,23,42,0.9));
   border-bottom: 1px solid rgba(148,163,184,0.2);
   padding: 14px 22px;
   display: flex;
@@ -56,11 +69,11 @@ header .logo {
 
 header .logo span {
   display: inline-flex;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 999px;
-  background: radial-gradient(circle at 30% 20%, #facc15, #f97316);
-  box-shadow: 0 0 20px rgba(250, 204, 21, 0.7);
+  background: radial-gradient(circle at 30% 20%, #facc15, var(--accent-warm));
+  box-shadow: 0 0 22px rgba(250, 204, 21, 0.9);
 }
 
 nav {
@@ -75,13 +88,18 @@ nav a {
   border-radius: 999px;
   color: var(--text-muted);
   border: 1px solid transparent;
-  transition: all 0.18s ease;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    transform 0.1s ease;
 }
 
 nav a:hover {
   color: var(--text-main);
   border-color: rgba(148,163,184,0.5);
   background: rgba(15,23,42,0.8);
+  transform: translateY(-1px);
 }
 
 nav a.active {
@@ -94,7 +112,7 @@ nav a.active {
 /* Layout container */
 
 .main-container {
-  max-width: 1040px;
+  max-width: 1120px;
   margin: 32px auto 40px;
   padding: 0 18px 60px;
 }
@@ -112,7 +130,11 @@ nav a.active {
   cursor: pointer;
   font-weight: 600;
   font-size: 0.95rem;
-  transition: transform 0.08s ease, box-shadow 0.12s ease, background 0.15s, border-color 0.15s;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.12s ease,
+    background 0.15s,
+    border-color 0.15s;
   white-space: nowrap;
 }
 
@@ -152,7 +174,7 @@ nav a.active {
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   gap: 32px;
   align-items: center;
 }
@@ -175,8 +197,8 @@ nav a.active {
 }
 
 .hero h1 {
-  font-size: clamp(2.1rem, 4vw, 2.8rem);
-  line-height: 1.1;
+  font-size: clamp(2.3rem, 4.2vw, 3.1rem);
+  line-height: 1.05;
   margin-bottom: 14px;
   background: linear-gradient(135deg, #e5e7eb, #a5b4fc, #22c55e);
   -webkit-background-clip: text;
@@ -185,7 +207,7 @@ nav a.active {
 
 .hero p {
   font-size: 0.98rem;
-  max-width: 520px;
+  max-width: 540px;
   color: var(--text-muted);
   margin-bottom: 22px;
 }
@@ -199,8 +221,9 @@ nav a.active {
 .hero-side {
   border-radius: 22px;
   padding: 16px 16px 14px;
-  background: radial-gradient(circle at top left, rgba(56,189,248,0.14), transparent 55%),
-              linear-gradient(to bottom right, rgba(15,23,42,0.95), rgba(15,23,42,0.9));
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,0.14), transparent 55%),
+    linear-gradient(to bottom right, rgba(15,23,42,0.98), rgba(15,23,42,0.92));
   border: 1px solid rgba(148,163,184,0.35);
   box-shadow: 0 18px 48px rgba(15,23,42,0.8);
 }
@@ -246,6 +269,79 @@ nav a.active {
   font-weight: 600;
 }
 
+/* Metrics row */
+
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.metric-card {
+  border-radius: 18px;
+  padding: 12px 14px;
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 55%),
+    linear-gradient(to bottom right, #020617, #020617);
+  border: 1px solid rgba(31,41,55,0.9);
+  box-shadow: 0 12px 28px rgba(15,23,42,0.9);
+}
+
+.metric-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.metric-number {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.metric-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Top categories (home + products) */
+
+.category-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.5);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: rgba(15,23,42,0.85);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+}
+
+.category-chip:hover {
+  border-color: var(--accent-2);
+  color: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.category-chip.active {
+  border-color: var(--accent);
+  background: rgba(22,163,74,0.25);
+  color: #bbf7d0;
+}
+
 /* Products */
 
 .products-grid {
@@ -256,8 +352,9 @@ nav a.active {
 }
 
 .product-card {
-  background: radial-gradient(circle at top left, rgba(56,189,248,0.1), transparent 55%),
-              linear-gradient(to bottom right, #020617, #020617);
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,0.1), transparent 55%),
+    linear-gradient(to bottom right, #020617, #020617);
   border-radius: 18px;
   padding: 16px 16px 14px;
   border: 1px solid rgba(31,41,55,0.9);
@@ -268,6 +365,10 @@ nav a.active {
   gap: 10px;
   position: relative;
   overflow: hidden;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.16s ease,
+    border-color 0.16s ease;
 }
 
 .product-card::before {
@@ -282,6 +383,12 @@ nav a.active {
 
 .product-card:hover::before {
   opacity: 1;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 46px rgba(15,23,42,1);
+  border-color: rgba(55,65,81,1);
 }
 
 .product-title {
@@ -331,11 +438,31 @@ nav a.active {
   color: #facc15;
 }
 
+/* Products toolbar */
+
+.products-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+  align-items: flex-end;
+}
+
+.products-toolbar label {
+  margin-bottom: 2px;
+}
+
+.products-toolbar input[type="text"],
+.products-toolbar select {
+  max-width: 260px;
+}
+
 /* Payment */
 
 .payment-box {
-  background: radial-gradient(circle at top left, rgba(56,189,248,0.2), transparent 55%),
-              linear-gradient(to bottom right, #020617, #020617);
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,0.2), transparent 55%),
+    linear-gradient(to bottom right, #020617, #020617);
   border-radius: 22px;
   padding: 20px 18px 18px;
   border: 1px solid rgba(31,41,55,0.95);
@@ -366,8 +493,9 @@ nav a.active {
 /* Admin */
 
 .admin-card {
-  background: radial-gradient(circle at top left, rgba(56,189,248,0.14), transparent 55%),
-              linear-gradient(to bottom right, #020617, #020617);
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,0.14), transparent 55%),
+    linear-gradient(to bottom right, #020617, #020617);
   border-radius: 22px;
   padding: 20px 18px 18px;
   border: 1px solid rgba(31,41,55,0.95);
@@ -507,25 +635,6 @@ label {
   color: var(--text-muted);
 }
 
-/* Products toolbar (search + sort + category) */
-
-.products-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 12px;
-  align-items: flex-end;
-}
-
-.products-toolbar label {
-  margin-bottom: 2px;
-}
-
-.products-toolbar input[type="text"],
-.products-toolbar select {
-  max-width: 260px;
-}
-
 /* Steps row */
 
 .steps-row {
@@ -563,41 +672,10 @@ label {
   color: #bbf7d0;
 }
 
-/* Metrics row */
+/* Admin stats row (reuse metrics) */
 
-.metrics-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
-  margin-top: 24px;
-}
-
-.metric-card {
-  border-radius: 18px;
-  padding: 12px 14px;
-  background: radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 55%),
-              linear-gradient(to bottom right, #020617, #020617);
-  border: 1px solid rgba(31,41,55,0.9);
-  box-shadow: 0 12px 28px rgba(15,23,42,0.9);
-}
-
-.metric-label {
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-}
-
-.metric-number {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 2px;
-}
-
-.metric-sub {
-  font-size: 0.8rem;
-  color: var(--text-muted);
+.admin-stats-row {
+  margin: 8px 0 16px;
 }
 
 /* Responsive */
