@@ -23,7 +23,7 @@
         <div class="admin-desc">
           <p>
             Use this dashboard to control which products appear on your store.
-            Add a new item, edit existing ones, or remove products you no longer sell.
+            Add categories and mark one or more items as <strong>Featured</strong>.
           </p>
         </div>
         <div>
@@ -46,6 +46,24 @@
               <input type="number" id="price" required min="0" step="1" placeholder="e.g. 5000" />
             </div>
             <div>
+              <label for="category">Category</label>
+              <select id="category">
+                <option value="">Select category</option>
+                <option value="Meals">Meals</option>
+                <option value="Combos">Combos</option>
+                <option value="Drinks">Drinks</option>
+                <option value="Snacks">Snacks</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label for="featured">Featured?</label>
+              <div style="display:flex; align-items:center; gap:6px; padding-top:4px;">
+                <input type="checkbox" id="featured" />
+                <span style="font-size:0.8rem; color:#9ca3af;">Show as featured item</span>
+              </div>
+            </div>
+            <div>
               <label for="description">Description</label>
               <textarea id="description" placeholder="Short description (optional)"></textarea>
             </div>
@@ -56,7 +74,7 @@
             </div>
           </form>
           <p style="font-size:0.78rem; color:#9ca3af;">
-            Tip: Keep this page and the login link private. Customers can not see it from the main site.
+            Tip: Mark one item as <strong>Featured</strong> to highlight it on your homepage.
           </p>
         </div>
 
@@ -65,9 +83,10 @@
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Category</th>
                 <th>Price (₦)</th>
-                <th>Description</th>
-                <th style="width:130px;">Actions</th>
+                <th>Featured</th>
+                <th style="width:140px;">Actions</th>
               </tr>
             </thead>
             <tbody id="productsTableBody">
@@ -94,7 +113,7 @@
       if (!products.length) {
         var tr = document.createElement("tr");
         var td = document.createElement("td");
-        td.colSpan = 4;
+        td.colSpan = 5;
         td.textContent = "No products yet. Add one using the form on the left.";
         td.style.color = "#9ca3af";
         td.style.fontSize = "0.84rem";
@@ -109,11 +128,14 @@
         var nameTd = document.createElement("td");
         nameTd.textContent = p.title;
 
+        var catTd = document.createElement("td");
+        catTd.textContent = p.category || "—";
+
         var priceTd = document.createElement("td");
         priceTd.textContent = Number(p.price).toLocaleString();
 
-        var descTd = document.createElement("td");
-        descTd.textContent = p.description || "";
+        var featTd = document.createElement("td");
+        featTd.textContent = p.featured ? "★ Yes" : "No";
 
         var actionsTd = document.createElement("td");
         actionsTd.className = "admin-actions";
@@ -134,8 +156,9 @@
         actionsTd.appendChild(delBtn);
 
         tr.appendChild(nameTd);
+        tr.appendChild(catTd);
         tr.appendChild(priceTd);
-        tr.appendChild(descTd);
+        tr.appendChild(featTd);
         tr.appendChild(actionsTd);
 
         tbody.appendChild(tr);
@@ -149,6 +172,7 @@
 
     function resetForm() {
       document.getElementById("productForm").reset();
+      document.getElementById("featured").checked = false;
       editingId = null;
       document.getElementById("saveButton").textContent = "Add Product";
       document.getElementById("modeBadge").innerHTML = '<span class="badge-dot"></span>Mode: Add';
@@ -159,6 +183,8 @@
       document.getElementById("title").value = product.title;
       document.getElementById("price").value = product.price;
       document.getElementById("description").value = product.description || "";
+      document.getElementById("category").value = product.category || "";
+      document.getElementById("featured").checked = !!product.featured;
       document.getElementById("saveButton").textContent = "Save Changes";
       document.getElementById("modeBadge").innerHTML = '<span class="badge-dot"></span>Mode: Edit';
     }
@@ -177,13 +203,17 @@
       var title = document.getElementById("title").value.trim();
       var price = document.getElementById("price").value.trim();
       var description = document.getElementById("description").value.trim();
+      var category = document.getElementById("category").value;
+      var featured = document.getElementById("featured").checked;
 
       if (!title || !price) return;
 
       var body = JSON.stringify({
         title: title,
         price: Number(price),
-        description: description
+        description: description,
+        category: category || "",
+        featured: featured
       });
 
       if (editingId) {

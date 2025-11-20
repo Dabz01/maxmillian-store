@@ -1,20 +1,34 @@
 [
   {
     "id": "1",
-    "title": "Small Item Pack",
-    "price": 2000,
-    "description": "Perfect for light orders and quick snacks."
+    "title": "Party Jollof Pack",
+    "price": 7500,
+    "description": "Jollof rice pack suitable for small celebrations.",
+    "category": "Meals",
+    "featured": true
   },
   {
     "id": "2",
-    "title": "Family Combo",
-    "price": 7500,
-    "description": "Enough for family or small group gatherings."
+    "title": "Family Combo Box",
+    "price": 12000,
+    "description": "Family-size combo with rice, protein and drinks.",
+    "category": "Combos",
+    "featured": false
   },
   {
     "id": "3",
-    "title": "Party Pack",
-    "price": 15000,
-    "description": "Great for parties and celebrations."
+    "title": "Chilled Soft Drink",
+    "price": 500,
+    "description": "Cold soft drink to go with your meal.",
+    "category": "Drinks",
+    "featured": false
+  },
+  {
+    "id": "4",
+    "title": "Snack Pack",
+    "price": 2500,
+    "description": "Light snack box for quick bites.",
+    "category": "Snacks",
+    "featured": false
   }
 ]

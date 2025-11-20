@@ -39,9 +39,9 @@
       <aside class="hero-side">
         <h2>How it works</h2>
         <div class="hero-chip-row" style="margin-bottom:10px;">
-          <span class="hero-chip">📱 WhatsApp Checkout</span>
-          <span class="hero-chip">🛒 3-step flow</span>
-          <span class="hero-chip">✨ No signup required</span>
+          <span class="hero-chip">🛒 Browse products</span>
+          <span class="hero-chip">✅ Confirm order</span>
+          <span class="hero-chip">💬 Pay via WhatsApp</span>
         </div>
         <p style="font-size:0.8rem; color:#9ca3af; margin-bottom:8px;">
           Customers browse your products, select what they want, and finish their
@@ -52,6 +52,104 @@
         </span>
       </aside>
     </section>
+
+    <section class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-label">Flow</div>
+        <div class="metric-number">3-step checkout</div>
+        <div class="metric-sub">Browse → Confirm → WhatsApp pay</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Experience</div>
+        <div class="metric-number">WhatsApp native</div>
+        <div class="metric-sub">No logins, no long forms — just chat.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Control</div>
+        <div class="metric-number">Hidden admin</div>
+        <div class="metric-sub">Manage products from a private panel.</div>
+      </div>
+    </section>
+
+    <section id="featuredSection" style="margin-top:32px; display:none;">
+      <div class="section-header">
+        <div class="section-tag">Featured</div>
+        <div class="section-title">Recommended today</div>
+        <p style="margin-top:4px; color:#9ca3af; font-size:0.86rem;">
+          Highlighted item from your store. You control this from the admin panel.
+        </p>
+      </div>
+      <div id="featuredCard"></div>
+    </section>
   </main>
+
+  <script>
+    async function loadFeatured() {
+      try {
+        const res = await fetch("/api/products");
+        const products = await res.json();
+        const featured = products.find(p => p.featured);
+
+        if (!featured) return;
+
+        const section = document.getElementById("featuredSection");
+        const container = document.getElementById("featuredCard");
+        section.style.display = "block";
+
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        const topDiv = document.createElement("div");
+
+        const title = document.createElement("div");
+        title.className = "product-title";
+        title.textContent = featured.title;
+
+        const price = document.createElement("div");
+        price.className = "product-price";
+        price.textContent = "₦" + Number(featured.price).toLocaleString();
+
+        const desc = document.createElement("div");
+        desc.className = "product-desc";
+        desc.textContent = featured.description || "";
+
+        const tags = document.createElement("div");
+        tags.className = "product-tags";
+
+        if (featured.category) {
+          const cat = document.createElement("span");
+          cat.className = "pill";
+          cat.textContent = featured.category;
+          tags.appendChild(cat);
+        }
+
+        const feat = document.createElement("span");
+        feat.className = "featured-badge";
+        feat.textContent = "★ Featured";
+        tags.appendChild(feat);
+
+        topDiv.appendChild(title);
+        topDiv.appendChild(price);
+        topDiv.appendChild(desc);
+        topDiv.appendChild(tags);
+
+        const btn = document.createElement("a");
+        btn.className = "btn btn-primary";
+        const itemParam = encodeURIComponent(featured.title);
+        const priceParam = encodeURIComponent(featured.price);
+        btn.href = "payment.html?item=" + itemParam + "&price=" + priceParam;
+        btn.textContent = "Order now";
+
+        card.appendChild(topDiv);
+        card.appendChild(btn);
+
+        container.appendChild(card);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    loadFeatured();
+  </script>
 </body>
 </html>

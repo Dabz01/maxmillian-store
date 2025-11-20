@@ -27,6 +27,12 @@
       </p>
     </div>
 
+    <div class="steps-row">
+      <div class="step-pill done"><span>1</span> Browse products</div>
+      <div class="step-pill active"><span>2</span> Confirm order</div>
+      <div class="step-pill"><span>3</span> WhatsApp payment</div>
+    </div>
+
     <div class="payment-box">
       <h2>Order Summary</h2>
 
@@ -54,7 +60,7 @@
     var price = params.get("price") || "—";
 
     var summaryEl = document.getElementById("orderSummary");
-    summaryEl.innerHTML = 
+    summaryEl.innerHTML =
       "<p><strong>Item:</strong> " + item + "<br>" +
       "<strong>Price:</strong> ₦" + price + "</p>" +
       "<p style=\"margin-top:10px; font-size:0.86rem; color:#9ca3af;\">" +
